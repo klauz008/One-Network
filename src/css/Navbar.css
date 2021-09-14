@@ -1,0 +1,76 @@
+.oHeader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1px;
+    background-color: #ffff;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0px 5px 8px -9px rgba(0, 0, 0, 0.5);
+}
+/* .oHeader{
+    height: 30px;
+    margin-right: 20px;
+} */
+.oHeader-icons{
+    display: flex;
+    margin-right: 20px;
+
+}
+.oHeader-icon > .MuiSvgIcon-root{
+    color: gray;
+    cursor: pointer;
+    font-size: xx-large;
+    padding: 5px 20px;
+}
+.oHeader-icon > .MuiSvgIcon-root:hover{
+    color: #DB353A;
+    border-radius: 10px;
+    background-color: lightgray;
+}
+.oHeader-input{
+    display: flex;
+    align-items: center;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 5px;
+}
+.oHeader-input > input{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: rgb(49, 49, 49);
+}
+.oHeader-input > .MuiSvgIcon-root{
+    color: lightgray;
+}
+.oHeader-rem{
+    display: flex;
+    align-items: center;
+    margin-left: 25px;
+}
+.oHeader-rem > .oHeader-avatar{
+    cursor: pointer;
+}
+.oHeader-rem > .MuiSvgIcon-root{
+    margin-left: 25px;
+    cursor: pointer;
+    font-size: xx-large;
+    color: gray;
+}
+.oHeader-rem > .MuiSvgIcon-root:hover{
+    color: #DB353A;
+}
+.oHeader-rem > .MuiButton-root{
+    margin-left: 25px;
+    cursor: pointer;
+    color: #ffff;
+    background-color: #b92b27;
+    border-radius: 20px;
+}
+.oHeader-rem > .MuiButton-root:hover{
+    color: #ffff;
+    background-color: #DB353A;
+}

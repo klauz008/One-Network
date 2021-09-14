@@ -1,0 +1,31 @@
+.OneNetworkBox {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid lightgray;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 10px;
+}
+.OneNetworkBox:hover {
+    border: 1px solid gray;
+}
+
+.OneNetworkBox-info{
+    display: flex;
+    align-items: center;
+}
+.OneNetworkBox-info > h5{
+    color: rgb(129, 129, 129);
+    font-weight: 300;
+    margin-left: 10px;
+}
+.OneNetworkBox-network{
+    display: flex;
+    margin-top: 8px;
+}
+.OneNetworkBox-network > p{
+    color: gray;
+    font-size: large;
+    font-weight: bold;
+}
