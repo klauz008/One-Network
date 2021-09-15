@@ -1,25 +1,117 @@
 import { Avatar } from '@material-ui/core';
 import { ArrowDownwardOutlined, ArrowUpwardOutlined, ChatBubbleOutlineOutlined, MoreHorizOutlined, RepeatOutlined, ShareOutlined } from '@material-ui/icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import "../css/Post.css";
+import { selectQuestionId, setQuestionInfo } from "../features/questionSlice";
+import Modal from 'react-modal';
+import db from '../firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import firebase from 'firebase';
+import { selectUser } from '../features/userSlice';
 
-function Post() {
+
+function Post({id, question,image,timestamp,oneNetworkUser}) {
+
+    const user = useSelector(selectUser);
+    const dispatch = useDispatch();
+    const[ modalIsOpen, setModalIsOpen]= useState(false);
+    const questionId = useSelector(selectQuestionId);
+    const [answer, setAnswer] = useState("");
+    const [getAnswers, setGetAnswers] = useState([]);
+
+    useEffect(() => {
+        if (questionId) {
+          db.collection("question")
+            .doc(questionId)
+            .collection("answer")
+            .orderBy("timestamp", "desc")
+            .onSnapshot((snapshot) =>
+              setGetAnswers(
+                snapshot.docs.map((doc) => ({ id: doc.id, answers: doc.data() }))
+              )
+            );
+        }
+    }, [questionId]);
+
+    const handleAnswer = (e) => {
+        e.preventDefault();
+    
+        if (questionId) {
+          db.collection("questions").doc(questionId).collection("answer").add({
+            user: user,
+            answer: answer,
+            questionId: questionId,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+        }
+        console.log(questionId);
+        setAnswer("");
+        setModalIsOpen(false);
+      };
+
+
     return (
-        <div className="post">
+        <div 
+            className="post"
+            onClick={() =>
+            dispatch(
+            setQuestionInfo({
+                questionId: id,
+                questionName: question,
+            })
+            )}
+        >
             <div className="post-info">
-               <Avatar />
-               <h5>Username</h5>
-               <small>Timestamp</small>
+               <Avatar 
+               src = {oneNetworkUser.photo}
+               />
+               <h5> {oneNetworkUser.displayName ? oneNetworkUser.displayName: oneNetworkUser.email} </h5>
+               <small>{new Date(timestamp?.toDate()).toLocaleString()}</small>
             </div> 
             <div className="post-body">
                 <div className="post-question">
-                    <p>Question</p>
-                    <button className="post-btnAnswer">Drop an Answer</button>
+                    <p>{question}</p>
+                    <button className="post-btnAnswer" onClick={() => setModalIsOpen(true)}>Drop an Answer</button>
+                    <Modal
+                isOpen = {modalIsOpen}
+                onRequestClose = {()=> setModalIsOpen(false)}
+                shouldCloseOnOverlayClick={false}
+                style={{
+                    overlay: {
+                    width: 700,
+                    height: 600,
+                    backgroundColor: "rgba(0,0,0,0.8)",
+                    zIndex: "1000",
+                    top: "50%",
+                    left: "50%",
+                    marginTop: "-300px",
+                    marginLeft: "-350px",
+                    },
+                }}>
+                    <div className="modal__question">
+                        <h1>Answer</h1>
+                        <p>
+                            asked by <span className="name">{user.displayName ? user.displayName : user.email}</span> {""} on <span className="name"> {new Date(timestamp?.toDate()).toLocaleString()}</span>
+                        </p> 
+                    </div>   
+
+                    <div className="modal__answer"> 
+                        <textarea 
+                        type= "text"
+                        value={answer}
+                        onChange={(e) => setAnswer(e.target.value)}
+                        placeholder="Enter your Answer" />
+                    </div>
+                    <div className="modal__button">
+                        <button className="cancel" onClick = {()=>setModalIsOpen(false)}>Cancel</button>  
+                        <button type= "submit" className="add" onClick={handleAnswer} >Answer</button>
+                    </div>
+                </Modal>
                 </div>
                 <div className="post-answer">
                     <p></p>
                 </div>
-                <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW92aWV8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="" srcset="" />
+                <img src={image} alt="" srcset="" />
             </div>
             <div className="post-footer">
                 <div className="post-footerAction">
@@ -39,3 +131,9 @@ function Post() {
 }
 
 export default Post
+
+
+
+
+
+   
